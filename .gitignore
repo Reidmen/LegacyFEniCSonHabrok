@@ -1,0 +1,9 @@
+### Vim ###
+[._]*.sw[a-z]
+
+### Ignore log files and slurm output
+*.out
+*.log
+
+# Ignore build files
+/build

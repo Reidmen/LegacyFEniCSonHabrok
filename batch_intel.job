@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=2
+#SBATCH --time=05:00
+#SBATCH --mem=8000
+
+source $HOME/dev/fenics-2017.2.0.post0-intel2018a/bin/env_fenics_run.sh
+
+export I_MPI_PMI_LIBRARY=/usr/lib64/libpmix.so
+pew in fenics-2017.2.0.post0-intel2018a srun python poisson.py
+
+# export SLURM_CPU_BIND=none
+# pew in fenics-2017.2.0.post0-intel2018a mpirun python poisson.py
