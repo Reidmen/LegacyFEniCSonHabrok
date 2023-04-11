@@ -7,49 +7,18 @@ This collection of scripts will automatically build current releases of
 [FEniCS](http://fenicsproject.org) with PETSc and all dependencies on the Peregrine HPC cluster of the University of Groningen (RUG), using Lmod modules (see the `env_build.sh` files).
 
 ## Prerequisites ##
+Singularity in your HPC. To check availability, you can check by typing `module avail`.
 
-### python 3 ###
-Python 3 with [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs) is required.
-This build uses `python 3.6.4` from the Lmod modules. 
-All FEniCS related python modules will be installed within an virtual environment.
-In particular, if you want to install different builds of FEniCS (different versions, 
-packages (e.g., OpenMPI vs. MPICH, Intel MKL vs. OpenBLAS), or for different processor 
-micro-architectures, see below), this will be helpful.
+## BUILDING INSTRUCTIONS ##
 
-Here, [pew](https://github.com/berdario/pew) is used to manage the virtualenvs. 
-To install `pew` follow these steps:
-```shell
-$ module load Python/3.6.4-intel-2018a
-$ pip3 install pew --user
-```
-
-## Compiling instructions ##
-
-First clone this repository, for example to the location `$HOME/dev`.
+First clone this repository, for example to the location `$HOME`.
 
 ```shell
-$ mkdir -p $HOME/dev && cd $HOME/dev
-$ git clone https://git.web.rug.nl/P301191/FEniCS-Peregrine.git
+$ cd $HOME
+$ git clone https://github.com/Reidmen/LegacyFEniCSonHabrok.git
 ```
 
-### SETUP ###
-The folder `intel` contains the build scripts using the intel toolchain (compilers, impi, intel MKL). 
-The folder `foss` contains build scripts using the foss toolchain (gcc, openblas, openmpi). 
-Select the folder according to which toolchain you want to use.
-The main file is `build_all.sh`. Modify it to set the FEniCS version to be used. The `$TAG` variable 
-(can be changed) specifies the directories FEniCS and its dependencies are installed to and the name of the virtual environment.
-It is recommended to set `continue_on_key=true` for the first build in order to check that each dependency was installed correctly!
-
-The script calls a number of `build_xxx.sh` scripts which download and install the corresponding applications. Edit these files to change the version, compile flags, etc.
-The calls can be commented if it was already built, e.g., if a number of programs was built correctly until an error occurred in, say, `build_dolfin.sh`, because of a network timeout.
-
-Note that if you want to rebuild everything the `$PREFIX` and the `$BUILD_DIR` dirs should be deleted, 
-also the python virtual environment with `pew rm $TAG`.
-
-
-Make sure the environments are correctly set in `env_build.sh` and `setup_env_fenics.env`. Also revise the individual build files.
-
-### INSTALL ###
+### BUILD (TODO)###
 
 In order to build FEniCS run 
 ```shell
@@ -61,19 +30,6 @@ on the compute node inside the `FEniCS-Peregrine/intel` directory.
 
 Wait for the build to finish. The output of
 the build will be stored in `build.log` as well as printed on the screen.
-
-## Running FEniCS ##
-To activate a FEniCS build you need to source the environment file created by the build script and activate the virtualenv. 
-The corresponding lines are printed after building is completed.
-```shell
-$ source <prefix>/bin/env_fenics_run.sh
-$ pew workon fenics-<tag>
-```
-Now you can run python/ipython. `python -c "import dolfin"` should work. 
-Try running `python poisson.py` and `mpirun -n 4 python poisson.py`.
-
-**Remark** If installed successfully, the fenics environment created will be named *fenics-2019.1.0.post0-intel2018a*.
-
 
 ## Building a sif image ##
 To build an singularity file, its required to provide a name (e.g. *legacy_fenics.sif*), its recipe
@@ -121,15 +77,7 @@ echo "EXECUTING DEMO"
 singularity exec legacy_fenics.sif python3 demos/demo_cahn_hilliard.py
 ```
 
-## Troubleshooting ##
-
-- If an error occurs, check that the environment and the virtualenv have been correctly loaded, e.g., with `which python`, `pip show dolfin`, `pip show petsc4py` which should point to the correct versions.
-- Check in the `build.log` if all dependencies were built correctly, in particular PETSc and DOLFIN. An exhaustive summary of the DOLFIN configuration is printed and should be checked.
-- If python crashes with "Illegal Construction" upon `import dolfin`, one of the dependencies was probably built on a different architecture. Make sure, e.g., petsc4py is picked up from the correct location and pip did not use a cached version when installing it!
-- A common error is that the `$PYTHONPATH` variable conflicts with the virtual environment, when the wrong python modules are found. To that end, in `env_build.sh` and `env_fenics_run.sh`, this variable is `unset`. Make sure it is not modified afterwards.
-
-
-## Extras: On working with ParaView and Peregrine ##
+## Extras: On working with ParaView and Peregrine (NOT UPDATED)##
 
 To run ParaView on the Peregrine sever:
 1. Run a pvsever on Peregrine, using the SLURM script below, choosing an arbitrary port number, e.g. 11111.
