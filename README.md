@@ -1,5 +1,5 @@
-# FEniCS Habrok Singularity - RUG#
-### Scripts for building FEniCS on the Habrok (RUG) ###
+# FEniCS Habrok Singularity #
+### Scripts for building FEniCS on the Habrok ###
 _based on [FEniCS and Singularity](https://fenicsproject.discourse.group/t/fenics-singularity-saving-data-with-mpirun/5048/6)_
 _inspired from [utwente wiki](https://hpc.wiki.utwente.nl/software:singularity) and [hardvard wiki](https://docs.rc.fas.harvard.edu/kb/singularity-on-the-cluster/)_
 
@@ -11,30 +11,17 @@ Singularity in your HPC. To check availability, you can check by typing `module 
 First clone this repository, for example to the location `$HOME`.
 
 ```shell
-$ cd $HOME
-$ git clone https://github.com/Reidmen/LegacyFEniCSonHabrok.git
+cd $HOME
+git clone https://github.com/Reidmen/LegacyFEniCSonHabrok.git
 ```
-
-### BUILD (NOT UPDATED) ###
-
-In order to build FEniCS run 
-```shell
-$ ./build_all.sh |& tee -a build.log
-```
-on the compute node inside the `FEniCS-Peregrine/intel` directory.
-
-**Remark** There is an outdated folder with foss compilers. Currently is it not supported and expected to be deprecated in the future.
-
-Wait for the build to finish. The output of
-the build will be stored in `build.log` as well as printed on the screen.
 
 ## Building a SIF image ##
 To build an singularity file, its required to provide a name (e.g. *legacy_fenics.sif*), its recipe
 located on `singularity/legacy_fenics.recipe` call the `build` command as described below.
 
 ```shell
-$ cd singularity
-$ singularity build legacy_fenics.sif legacy_fenics.recipe
+cd singularity
+singularity build legacy_fenics.sif legacy_fenics.recipe
 ```
 
 ## Executing demo file ##
@@ -42,14 +29,14 @@ $ singularity build legacy_fenics.sif legacy_fenics.recipe
 To execute a python script, its required to start a shell session and execute the script as described below.
 
 ```shell
-$ singularity shell legacy_fenics.sif
-$ mkdir -p ouput
-$ python3 demos/demo_cahn_hilliard.py
+singularity shell legacy_fenics.sif
+mkdir -p ouput
+python3 demos/demo_cahn_hilliard.py
 ```
 
 As alternative, to execute in paralell its enough to call `mpirun` within the container.
 ```shell
-$ mpirun -n 4 python3 demos/demo_cahn_hilliard.py
+mpirun -n 4 python3 demos/demo_cahn_hilliard.py
 ```
 
 ## Submit jobs to Habrok ##
