@@ -3,9 +3,6 @@
 _based on [FEniCS and Singularity](https://fenicsproject.discourse.group/t/fenics-singularity-saving-data-with-mpirun/5048/6)_
 _inspired from [utwente wiki](https://hpc.wiki.utwente.nl/software:singularity) and [hardvard wiki](https://docs.rc.fas.harvard.edu/kb/singularity-on-the-cluster/)_
 
-This collection of scripts will automatically build current releases of
-[FEniCS](http://fenicsproject.org) with PETSc and all dependencies on the Peregrine HPC cluster of the University of Groningen (RUG), using Lmod modules (see the `env_build.sh` files).
-
 ## Prerequisites ##
 Singularity in your HPC. To check availability, you can check by typing `module avail`.
 
@@ -18,7 +15,7 @@ $ cd $HOME
 $ git clone https://github.com/Reidmen/LegacyFEniCSonHabrok.git
 ```
 
-### BUILD (TODO)###
+### BUILD (NOT UPDATED) ###
 
 In order to build FEniCS run 
 ```shell
@@ -31,7 +28,7 @@ on the compute node inside the `FEniCS-Peregrine/intel` directory.
 Wait for the build to finish. The output of
 the build will be stored in `build.log` as well as printed on the screen.
 
-## Building a sif image ##
+## Building a SIF image ##
 To build an singularity file, its required to provide a name (e.g. *legacy_fenics.sif*), its recipe
 located on `singularity/legacy_fenics.recipe` call the `build` command as described below.
 
