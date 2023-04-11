@@ -92,7 +92,7 @@ if MPI.rank(MPI.comm_world) == 0:
 
 # Step in time
 t = 0.0
-T = 5 * dt
+T = 10 * dt
 while t < T:
     t += dt
     u0.vector()[:] = u.vector()
