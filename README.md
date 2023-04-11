@@ -1,6 +1,7 @@
-# FEniCS-Peregrine HPC #
-### Scripts for building FEniCS on the Peregrine cluster at RUG ###
-_forked from [fenics-gaia-cluster](https://bitbucket.org/unilucompmech/fenics-gaia-cluster)_
+# FEniCS Habrok Singularity - RUG#
+### Scripts for building FEniCS on the Habrok (RUG) ###
+_based on [FEniCS and Singularity](https://fenicsproject.discourse.group/t/fenics-singularity-saving-data-with-mpirun/5048/6)_
+_inspired from [utwente wiki](https://hpc.wiki.utwente.nl/software:singularity) and [hardvard wiki](https://docs.rc.fas.harvard.edu/kb/singularity-on-the-cluster/)_
 
 This collection of scripts will automatically build current releases of
 [FEniCS](http://fenicsproject.org) with PETSc and all dependencies on the Peregrine HPC cluster of the University of Groningen (RUG), using Lmod modules (see the `env_build.sh` files).
@@ -73,23 +74,51 @@ Try running `python poisson.py` and `mpirun -n 4 python poisson.py`.
 
 **Remark** If installed successfully, the fenics environment created will be named *fenics-2019.1.0.post0-intel2018a*.
 
-## Submit jobs to Peregrine (RUG) ##
+
+## Building a sif image ##
+To build an singularity file, its required to provide a name (e.g. *legacy_fenics.sif*), its recipe
+located on `singularity/legacy_fenics.recipe` call the `build` command as described below.
+
+```shell
+$ cd singularity
+$ singularity build legacy_fenics.sif legacy_fenics.recipe
+```
+
+## Executing demo file ##
+
+To execute a python script, its required to start a shell session and execute the script as described below.
+
+```shell
+$ singularity shell legacy_fenics.sif
+$ mkdir -p ouput
+$ python3 demos/demo_cahn_hilliard.py
+```
+
+As alternative, to execute in paralell its enough to call `mpirun` within the container.
+```shell
+$ mpirun -n 4 python3 demos/demo_cahn_hilliard.py
+```
+
+## Submit jobs to Habrok ##
 To submit jobs to Peregrine, you need to provide a minimal configuration using sbatch, 
-activate FEniCS environment and export the MPI library, e.g.
+activate the environment, e.g.
 ```bash
 #!/bin/bash
-#SBATCH --job-name=name_of_job
+#SBATCH --job-name=sing_test
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=16
-#SBATCH --time=30:00:00
+#SBATCH --ntasks-per-node=4
+#SBATCH --time=00:05:00
 #SBATCH --mem=4000 
 
 # Load compilers and FEniCS environment variables
 source $HOME/dev/fenics-2019.1.0.post0-intel2018a/bin/env_fenics_run.sh 
 export I_MPI_PMI_LIBRARY=/usr/lib64/libpmix.so
-
-# run the script using the specified num. of cores with srun
-pew in fenics-2019.1.0.post0-intel2018a srun python3 /home/you_p_number/path_to_your_file/your_file.yaml
+echo "STARTING JOB"
+echo "OS_RELEASE"
+singularity exec legacy_fenics.sif cat /etc/os_release
+echo "EXECUTING DEMO"
+# executes the code in parallel using the configuration above
+singularity exec legacy_fenics.sif python3 demos/demo_cahn_hilliard.py
 ```
 
 ## Troubleshooting ##
