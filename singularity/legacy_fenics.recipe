@@ -1,0 +1,5 @@
+Bootstrap: docker
+From: reidmen/fenics-openmpi 
+%post
+    apt-get -y update
+    python3 -m pip install numpy

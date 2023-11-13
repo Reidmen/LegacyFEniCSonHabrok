@@ -26,15 +26,6 @@ from dolfin import *
 parameters.parse(args)
 # set_log_level(PROGRESS)
 
-# prevent output from rank > 0 processes
-if MPI.rank(MPI.comm_world) > 0:
-    sys.stdout = open("/dev/null", "w")
-    # and handle C++ as well
-    from ctypes import *
-    libc = CDLL("libc.so.6")
-    stdout = libc.fdopen(1, "w")
-    libc.freopen("/dev/null", "w", stdout)
-
 parameters["form_compiler"]["optimize"]     = True
 parameters["form_compiler"]["cpp_optimize"] = True
 # parameters["form_compiler"]["representation"] = "quadrature"
@@ -49,6 +40,7 @@ def main():
     # Get number of MPI processes
     ncores = MPI.size(MPI.comm_world)
     N = (ndofs*ncores)
+    print(f"number of cores {ncores}")
     
     # Refinement levels
     Nx = int(N**(1./3.) + 0.5)
@@ -133,7 +125,7 @@ def main():
     del(t0)
 
     t0 = Timer("Z Solving...")
-    solver = PETScKrylovSolver("cg"# ("cg", "hypre_amg")
+    solver = PETScKrylovSolver("cg", "hypre_amg")
     solver.parameters["relative_tolerance"] = 1e-10
     solver.set_from_options()
     info(solver.parameters, True)
