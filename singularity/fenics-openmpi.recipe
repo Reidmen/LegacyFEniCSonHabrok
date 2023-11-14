@@ -2,5 +2,4 @@ Bootstrap: docker
 From: reidmen/fenics-openmpi:latest
 %post
     apt-get update
-    apt-get install vim
     python3 -m pip install numpy
