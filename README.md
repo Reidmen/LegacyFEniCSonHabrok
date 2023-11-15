@@ -1,4 +1,5 @@
 # FEniCS Habrok Singularity
+
 ### Scripts for building FEniCS on the Habrok
 _based on [FEniCS and Singularity](https://fenicsproject.discourse.group/t/fenics-singularity-saving-data-with-mpirun/5048/6)_
 _inspired from [utwente wiki](https://hpc.wiki.utwente.nl/software:singularity) and [harvard wiki](https://docs.rc.fas.harvard.edu/kb/singularity-on-the-cluster/)_
@@ -33,7 +34,7 @@ cd singularity
 singularity build fenics-openmpi.sif docker://reidmen/fenics-openmpi:latest
 ```
 
-## Executing demo file ##
+## Executing demo file
 
 In order for OpenMPI to work properly, we need to export the following:
 ```shell
@@ -52,7 +53,7 @@ As alternative, to execute in paralell its enough to call `mpirun` within the co
 mpirun -n 6 python3 singularity/demo_poisson_mpi_test.py
 ```
 
-## Submit jobs to Habrok ##
+## Submit jobs to Habrok
 To submit jobs to Peregrine, you need to provide a minimal configuration using sbatch, export the variables above and activate the environment, e.g.
 ```bash
 #!/bin/bash
