@@ -1,4 +1,4 @@
-# Based on https://github.com/scientificcomputing/packages/blob/main/fenics/Dockerfile:
+# Based on https://github.com/scientificcomputing/packages/blob/main/fenics/Dockerfile
 # Dependency versions
 ARG PYBIND11_VERSION=2.10.1
 ARG PETSC_VERSION=3.18.6
