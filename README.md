@@ -19,11 +19,11 @@ git clone https://github.com/Reidmen/LegacyFEniCSonHabrok.git
 ## Building a SIF image
 
 To build an singularity file, its required to provide a name (e.g. *fenics-openmpi.sif*), its recipe
-located in `singularity/legacy_fenics.recipe` call the `build` command as described below.
+located in `singularity/fenics-openmpi.recipe` call the `build` command as described below.
 
 ```shell
 cd singularity
-singularity build legacy_fenics.sif legacy_fenics.recipe
+singularity build fenics-openmpi.sif fenics-openmpi.recipe
 ```
 
 An alternative, is to directly specifiy the source. An OpenMPI version is available in `reidmen/fenics-openmpi:latest`.
@@ -50,7 +50,7 @@ python3 singularity/demo_poisson_mpi_test.py
 
 As alternative, to execute in paralell its enough to call `mpirun` within the container.
 ```shell
-mpirun -n 6 python3 singularity/demo_poisson_mpi_test.py
+mpirun -n 8 python3 singularity/demo_poisson_mpi_test.py
 ```
 
 ## Submit jobs to Habrok
@@ -59,7 +59,7 @@ To submit jobs to Peregrine, you need to provide a minimal configuration using s
 #!/bin/bash
 #SBATCH --job-name=singularity_test
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=6
+#SBATCH --ntasks-per-node=8
 #SBATCH --time=00:05:00
 #SBATCH --mem=4000 
 
@@ -69,9 +69,8 @@ export OMP_NUM_THREADS=6
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 
 echo "EXECUTING DEMO"
-# singularity run legacy_fenics.sif cat /etc/os-release
-# mpirun -n $NP singularity exec fenics-openmpi.sif python3 poisson_mpi_test.py
-mpirun -n $OMP_NUM_THREADS singularity exec legacy_fenics.sif python3 -c "from dolfin import *; print(MPI.comm_world.rank)"
+# singularity run fenics-openmpi.sif cat /etc/os-release
+mpirun -n $OMP_NUM_THREADS singularity exec fenics-openmpi.sif python3 -c "from dolfin import *; print(MPI.comm_world.rank)"
 ```
 
 If successful, the output should enumerate the threads being requested in the job.

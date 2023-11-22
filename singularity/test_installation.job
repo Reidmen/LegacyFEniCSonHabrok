@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=sing_test
+#SBATCH --job-name=fenics_test_installation
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=6
 #SBATCH --time=00:02:00
@@ -11,6 +11,6 @@ export OMP_NUM_THREADS=6
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 
 echo "EXECUTING DEMO"
-# singularity run legacy_fenics.sif cat /etc/os-release
-# mpirun -n $NP singularity exec legacy_fenics.sif python3 poisson_mpi_test.py
+# singularity run fenics-openmpi.sif cat /etc/os-release
+# mpirun -n $NP singularity exec fenics-openmpi.sif python3 poisson_mpi_test.py
 mpirun -n $OMP_NUM_THREADS singularity exec fenics-openmpi.sif python3 -c "from dolfin import *; print(MPI.comm_world.rank)"
